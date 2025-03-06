@@ -1,0 +1,24 @@
+{
+  "name": "lardsd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brew0day/lardsd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/brew0day/lardsd/issues"
+  },
+  "homepage": "https://github.com/brew0day/lardsd#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
