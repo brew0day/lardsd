@@ -1,5 +1,12 @@
 {
-  "dependencies": {
-    "killbot.to": "^1.2.7"
-  }
+    "name": "mon-projet-killbot",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "killbot.to": "^1.2.7"
+    }
 }
