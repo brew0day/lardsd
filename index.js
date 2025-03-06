@@ -1,11 +1,13 @@
+// index.js
 const express = require('express');
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello from Render!');
+  res.send('Hello from Yarn on Render!');
 });
 
 app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
