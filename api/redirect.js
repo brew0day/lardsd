@@ -7,8 +7,33 @@ const killBot = new KillBot(apiKey, config);
 
 export default async function handler(req, res) {
   try {
-    // Vérification du bot via KillBot
-    const result = await killBot.checkReq(req);
+    // Extraire l'IP du client depuis les en-têtes de Render
+    // Render utilise X-Forwarded-For ou remoteAddress
+    const clientIP = 
+      req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 
+      req.headers['x-real-ip'] || 
+      req.connection.remoteAddress || 
+      '127.0.0.1';
+
+    console.log("Client IP détectée:", clientIP);
+    
+    // Créer un objet modifié pour KillBot avec l'IP explicitement définie
+    const modifiedReq = {
+      ...req,
+      ip: clientIP,
+      // Ajouter aussi ces propriétés pour plus de compatibilité
+      connection: {
+        ...req.connection,
+        remoteAddress: clientIP
+      },
+      headers: {
+        ...req.headers,
+        'x-forwarded-for': clientIP
+      }
+    };
+
+    // Vérification du bot via KillBot avec l'objet modifié
+    const result = await killBot.checkReq(modifiedReq);
     
     if (result.block) {
       const requestedPageWithoutQueryString = req.path || '/';
@@ -32,6 +57,16 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error('KillBot error:', err);
-    return res.status(500).send('Internal Server Error');
+    // Ajout d'informations de débogage pour comprendre l'erreur
+    console.error('Request IP info:', {
+      ip: req.ip,
+      remoteAddress: req.connection?.remoteAddress,
+      xForwardedFor: req.headers['x-forwarded-for'],
+      xRealIp: req.headers['x-real-ip']
+    });
+    
+    // En cas d'erreur avec KillBot, rediriger quand même pour éviter de bloquer l'utilisateur
+    res.writeHead(302, { Location: 'https://maurpie.com' });
+    return res.end();
   }
 }
