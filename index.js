@@ -1,36 +1,30 @@
-// index.js (CommonJS style)
-const express = require('express');
-const KillBot = require('killbot.to');
+import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import redirectHandler from './api/redirect.js';
 
+// Configuration
+dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
-// Sur Render, process.env.PORT est fourni ; sinon 3000 en local
 const PORT = process.env.PORT || 3000;
 
-// Votre clé API KillBot
-const apiKey = '225e7b97-524c-45d6-800c-aa7e3831a1ab';
-const config = 'default';
-const killBot = new KillBot(apiKey, config);
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.get('/', (req, res) => {
-  killBot.checkReq(req)
-    .then(result => {
-      if (result.block) {
-        // Bloque l’utilisateur
-        // On peut renvoyer un faux 404 ou un 403
-        res.status(403).json({ message: 'Access denied' });
-      } else {
-        // Autorise l’utilisateur
-        // On peut renvoyer un JSON ou rediriger
-        const location = result.IPlocation;
-        res.json({ message: 'Welcome', location });
-      }
-    })
-    .catch(error => {
-      console.error('KillBot error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+  // Utiliser notre gestionnaire de redirection pour la route principale
+  return redirectHandler(req, res);
 });
 
+// Route API qui peut être utilisée pour /api/redirect
+app.get('/api/redirect', redirectHandler);
+
+// Démarrage du serveur
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
